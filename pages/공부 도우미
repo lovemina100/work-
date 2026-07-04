@@ -1,0 +1,45 @@
+import streamlit as st
+import random
+
+st.set_page_config(page_title="AI 공부 도우미", page_icon="🤖")
+
+st.title("🤖 AI 공부 도우미")
+st.write("공부하다가 모르는 개념이나 수학 공식, 영어 단어가 있다면 질문해 보세요!")
+
+# 대화 기록 저장소 만들기
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# 이전 대화 내용 보여주기
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# 사용자 질문 입력창 받기
+if prompt := st.chat_input("수학 공식, 단어 뜻 등 무엇이든 물어보세요!"):
+    # 1. 내가 쓴 글 화면에 띄우기
+    with st.chat_message("user"):
+        st.markdown(prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # 2. AI의 답변 만들기 (여기서는 인공지능처럼 대답하는 규칙을 만들었어요)
+    with st.chat_message("assistant"):
+        response_placeholder = st.empty()
+        
+        # 질문에 특정 단어가 들어있으면 맞춤형 답변 주기
+        if "수학" in prompt or "공식" in prompt:
+            ai_reply = f"✏️ '{prompt}'에 대한 수학 질문이군요! 수학은 원리를 이해하는 게 중요해요. 공식의 유도 과정을 다시 한번 교과서에서 찾아보는 걸 추천해요!"
+        elif "영어" in prompt or "단어" in prompt:
+            ai_reply = f"🔤 영어는 반복이 생명이에요! 하루에 5번씩 소리 내어 읽으면 금방 외워질 거예요. 힘내세요!"
+        else:
+            # 기본 랜덤 응원 및 답변
+            replies = [
+                f"🌟 좋은 질문이에요! '{prompt}'에 대해 조금 더 깊게 교과서를 정독해 보면 이해가 쏙쏙 될 거예요.",
+                f"💡 문제를 해결하는 열쇠는 기본 개념에 있어요. 질문해주신 내용을 뇌가 기억하도록 노트에 한 번 써보는 건 어떨까요?",
+                f"👍 아주 훌륭한 탐구 자세입니다! 지치지 말고 한 걸음씩 나아가 봐요."
+            ]
+            ai_reply = random.choice(replies)
+            
+        response_placeholder.markdown(ai_reply)
+        
+    st.session_state.messages.append({"role": "assistant", "content": ai_reply})
