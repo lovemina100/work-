@@ -1,0 +1,30 @@
+import streamlit as st
+import time
+
+st.set_page_config(page_title="공부 시간 측정", page_icon="⏳")
+
+st.title("⏳ 뽀모도로 공부 타이머")
+st.write("25분 동안 집중하고 5분 동안 쉬어보세요. (체험을 위해 버튼을 누르면 10초 동안 작동하도록 설정되어 있습니다!)")
+
+# 세션 상태로 공부 완료 횟수 저장하기
+if "study_count" not in st.session_state:
+    st.session_state.study_count = 0
+
+# 타이머 작동 버튼
+if st.button("🔥 25분 집중 시작하기"):
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+    
+    # 중학생 여러분의 테스트를 위해 실제 25분 대신 10초 동안 진행바가 차오르도록 설정했습니다.
+    # 만약 진짜 25분(1500초)을 하고 싶다면 range(1500)으로 바꾸고 time.sleep(1)로 바꾸면 됩니다!
+    for i in range(100):
+        time.sleep(0.1) # 0.1초마다 진행률 업데이트
+        progress_bar.progress(i + 1)
+        status_text.text(f"📝 열공 중... 집중하세요! ({i+1}%)")
+        
+    st.success("🎉 25분 집중 완료! 정말 대단해요!")
+    st.balloons() # 축하 폭죽 효과!
+    st.session_state.study_count += 1
+
+st.markdown("---")
+st.metric(label="🏆 오늘 집중 성공 횟수", value=f"{st.session_state.study_count}회")
