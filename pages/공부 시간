@@ -1,0 +1,40 @@
+import streamlit as st
+import pandas as pd
+
+st.set_page_config(page_title="공부 시간표", page_icon="📅")
+
+st.title("📅 나의 주간 공부 시간표")
+st.write("요일을 고르고 오늘 해야 할 공부를 체크해 가며 완료해 보세요!")
+
+# 주간 공부 데이터 만들기
+timetable_data = {
+    "월요일": ["수학 문제집 3장 풀기", "영어 단어 20개 암기", "역사 교과서 읽기"],
+    "화요일": ["과학 실험 보고서 작성", "국어 비문학 2지문", "수학 오답노트"],
+    "수요일": ["영어 리스닝 1회", "사회 프린트 복습", "독서록 쓰기"],
+    "목요일": ["수학 단원평가 대비", "과학 단어 정리", "영어 본문 외우기"],
+    "금요일": ["주말 과제 미리 하기", "한자 10개 쓰기", "자유 독서"]
+}
+
+# 요일 선택 상자
+selected_day = st.selectbox("요일을 선택해 주세요 👇", options=["월요일", "화요일", "수요일", "목요일", "금요일"])
+
+st.markdown("---")
+st.subheader(f"📝 {selected_day} 공부 체크리스트")
+
+# 선택한 요일의 할 일 꺼내오기
+todo_list = timetable_data.get(selected_day, [])
+
+# 체크박스로 화면에 뿌려주기
+all_done = True
+for todo in todo_list:
+    # 체크박스를 누르면 True가 됨
+    if st.checkbox(todo, key=f"{selected_day}_{todo}"):
+        st.write(f"🍏 ~~{todo} 완료!~~")
+    else:
+        st.write(f"❌ 아직 안 했어요!")
+        all_done = False # 하나라도 체크가 안 되어 있으면 False
+
+# 만약 모든 체크박스가 켜지면 칭찬 상자 띄우기!
+if all_done:
+    st.markdown("---")
+    st.success(f"💯 대박! {selected_day} 목표 공부를 모두 끝마쳤습니다! 최고의 하루네요! 🥳")
